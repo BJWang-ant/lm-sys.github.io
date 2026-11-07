@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 290" role="img" aria-labelledby="title">
+<title id="title">Gather FP4 keys once and score in FP8</title>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0l8 4-8 4z" fill="#64748b"/></marker></defs>
+<style>
+text { font: 20px system-ui, sans-serif; fill: #1b2b43; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 19px; font-weight: 650; }
+.arrow { stroke: #64748b; stroke-width: 2; marker-end: url(#arrow); }
+</style>
+<rect width="840" height="290" rx="14" fill="#f8fafc" stroke="#d7e1eb"/>
+<text x="24" y="46" class="title">Gather FP4 keys once and score in FP8</text>
+<text x="24" y="95" class="label">Key gather</text>
+<rect x="24" y="106" width="236" height="63" rx="10" fill="#e9eff8" stroke="#b8c9dc"/>
+<text x="142" y="140" text-anchor="middle"><tspan x="142" dy="0">Packed FP4 + scales</tspan></text>
+<path d="M268 138h25" class="arrow"/>
+<rect x="302" y="106" width="236" height="63" rx="10" fill="#e9eff8" stroke="#b8c9dc"/>
+<text x="420" y="140" text-anchor="middle"><tspan x="420" dy="0">Apply scales in FP32</tspan></text>
+<path d="M546 138h25" class="arrow"/>
+<rect x="580" y="106" width="236" height="63" rx="10" fill="#e9eff8" stroke="#b8c9dc"/>
+<text x="698" y="140" text-anchor="middle"><tspan x="698" dy="0">Clamp to ±448</tspan></text>
+
+<text x="24" y="195" class="label">FP8 scoring</text>
+<rect x="24" y="206" width="236" height="63" rx="10" fill="#e2f3eb" stroke="#a8cfc0"/>
+<text x="142" y="240" text-anchor="middle"><tspan x="142" dy="0">E4M3 keys + queries</tspan></text>
+<path d="M268 238h25" class="arrow"/>
+<rect x="302" y="206" width="236" height="63" rx="10" fill="#e2f3eb" stroke="#a8cfc0"/>
+<text x="420" y="240" text-anchor="middle"><tspan x="420" dy="0">DeepGEMM logits</tspan></text>
+<path d="M546 238h25" class="arrow"/>
+<rect x="580" y="206" width="236" height="63" rx="10" fill="#e2f3eb" stroke="#a8cfc0"/>
+<text x="698" y="240" text-anchor="middle"><tspan x="698" dy="0">Causal mask + top-k</tspan></text>
+
+</svg>
