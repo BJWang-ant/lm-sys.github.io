@@ -1,32 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 290" role="img" aria-labelledby="title">
-<title id="title">Fuse candidate selection and index writeback</title>
-<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0l8 4-8 4z" fill="#64748b"/></marker></defs>
-<style>
-text { font: 20px system-ui, sans-serif; fill: #1b2b43; }
-.title { font-size: 28px; font-weight: 700; }
-.label { font-size: 19px; font-weight: 650; }
-.arrow { stroke: #64748b; stroke-width: 2; marker-end: url(#arrow); }
-</style>
-<rect width="840" height="290" rx="14" fill="#f8fafc" stroke="#d7e1eb"/>
-<text x="24" y="46" class="title">Fuse candidate selection and index writeback</text>
-<text x="24" y="95" class="label">Block selection</text>
-<rect x="24" y="106" width="236" height="63" rx="10" fill="#e9eff8" stroke="#b8c9dc"/>
-<text x="142" y="140" text-anchor="middle"><tspan x="142" dy="0">Reduce each block</tspan></text>
-<path d="M268 138h25" class="arrow"/>
-<rect x="302" y="106" width="236" height="63" rx="10" fill="#e9eff8" stroke="#b8c9dc"/>
-<text x="420" y="140" text-anchor="middle"><tspan x="420" dy="0">Keep newest block</tspan></text>
-<path d="M546 138h25" class="arrow"/>
-<rect x="580" y="106" width="236" height="63" rx="10" fill="#e9eff8" stroke="#b8c9dc"/>
-<text x="698" y="140" text-anchor="middle"><tspan x="698" dy="0">Emit candidate IDs</tspan></text>
-
-<text x="24" y="195" class="label">Slot writeback</text>
-<rect x="24" y="206" width="236" height="63" rx="10" fill="#e2f3eb" stroke="#a8cfc0"/>
-<text x="142" y="240" text-anchor="middle"><tspan x="142" dy="0">Filter invalid picks</tspan></text>
-<path d="M268 238h25" class="arrow"/>
-<rect x="302" y="206" width="236" height="63" rx="10" fill="#e2f3eb" stroke="#a8cfc0"/>
-<text x="420" y="240" text-anchor="middle"><tspan x="420" dy="0">Sort positions</tspan></text>
-<path d="M546 238h25" class="arrow"/>
-<rect x="580" y="206" width="236" height="63" rx="10" fill="#e2f3eb" stroke="#a8cfc0"/>
-<text x="698" y="240" text-anchor="middle"><tspan x="698" dy="0">Write physical slots</tspan></text>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="433" viewBox="0 0 1100 433" role="img" aria-labelledby="title desc">
+  <title id="title">Fuse two independent parts of prefill selection</title>
+  <desc id="desc">Separate Torch operations and intermediate writes become two distinct Triton kernels. One reduces scores and publishes candidate blocks. The other sorts and validates selected positions and maps them to physical cache slots.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="m0 0 10 5-10 5z" fill="#6c5e7a"/></marker></defs>
+  <rect width="1100" height="433" fill="#fff"/>
+  <g font-family="system-ui, sans-serif" fill="#222641">
+    <text x="34" y="43" font-size="28" font-weight="700">Remove intermediate writes at two Indexer steps</text>
+    <text x="239" y="90" font-size="17" font-weight="750" fill="#64546e">BEFORE · SEPARATE OPERATIONS</text>
+    <text x="679" y="90" font-size="17" font-weight="750" fill="#65428d">AFTER · ONE TRITON LAUNCH PER STEP</text>
+    <path d="M34 252h1032" stroke="#ddd9e4"/>
+    <g font-size="20" font-weight="700">
+      <text x="34" y="150">Publish</text><text x="34" y="176">candidate blocks</text>
+      <text x="34" y="300">Write selected</text><text x="34" y="326">KV slots</text>
+    </g>
+    <g fill="#f3eff6">
+      <rect x="239" y="124" width="110" height="68" rx="7"/><rect x="365" y="124" width="119" height="68" rx="7"/><rect x="500" y="124" width="124" height="68" rx="7"/>
+      <rect x="239" y="274" width="110" height="68" rx="7"/><rect x="365" y="274" width="119" height="68" rx="7"/><rect x="500" y="274" width="124" height="68" rx="7"/>
+    </g>
+    <g font-size="18" text-anchor="middle">
+      <text x="294" y="152">Reduce</text><text x="294" y="176">block max</text>
+      <text x="424" y="152">Handle</text><text x="424" y="176">newest block</text>
+      <text x="562" y="152">Select</text><text x="562" y="176">candidates</text>
+      <text x="294" y="314">Sort picks</text><text x="424" y="302">Check</text><text x="424" y="326">validity</text>
+      <text x="562" y="302">Map to</text><text x="562" y="326">KV slots</text>
+    </g>
+    <g fill="none" stroke="#6c5e7a" stroke-width="1.7" marker-end="url(#arrow)">
+      <path d="M350 158h13"/><path d="M486 158h12"/><path d="M350 308h13"/><path d="M486 308h12"/>
+      <path d="M632 158h35"/><path d="M632 308h35"/>
+    </g>
+    <g fill="#ede4f7" stroke="#baa4d4"><rect x="679" y="124" width="387" height="68" rx="9"/><rect x="679" y="274" width="387" height="68" rx="9"/></g>
+    <g text-anchor="middle">
+      <text x="872" y="151" font-size="19" font-weight="700">select_candidate_blocks</text>
+      <text x="872" y="176" font-size="17">Block max + newest block + selection</text>
+      <text x="872" y="301" font-size="19" font-weight="700">write_prefill</text>
+      <text x="872" y="326" font-size="17">Sort + validity + slot mapping</text>
+    </g>
+    <g font-size="17" fill="#64546e">
+      <text x="239" y="220">Intermediate tensors between steps</text>
+      <text x="679" y="220">Writes candidate block IDs</text>
+      <text x="239" y="370">Intermediate tensors between steps</text>
+      <text x="679" y="370">Writes physical KV slot IDs</text>
+    </g>
+  </g>
 </svg>
